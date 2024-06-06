@@ -1,0 +1,59 @@
+1.Problem Number: 846
+2.Problem Name: Hand Of Straights
+3.Difficulty: Medium
+4.Problem link: https://leetcode.com/problems/hand-of-straights/editorial/
+5.Time Solved: 18:46
+
+Solution : 
+class Solution {
+public:
+    bool isNStraightHand(vector<int>& hand, int groupSize) {
+        int handSize = hand.size();
+
+        if (handSize % groupSize != 0) {
+            return false;
+        }
+
+        // Map to store the count of each card value
+        map<int, int> cardCount;
+        for (int i = 0; i < handSize; i++) {
+            cardCount[hand[i]]++;
+        }
+
+        // Process the cards until the map is empty
+        while (!cardCount.empty()) {
+            // Get the smallest card value
+            int currentCard = cardCount.begin()->first;
+            // Check each consecutive sequence of groupSize cards
+            for (int i = 0; i < groupSize; i++) {
+                // If a card is missing or has exhausted its occurrences
+                if (cardCount[currentCard + i] == 0) {
+                    return false;
+                }
+                cardCount[currentCard + i]--;
+                if (cardCount[currentCard + i] < 1) {
+                    // Remove the card value if its occurrences are exhausted
+                    cardCount.erase(currentCard + i);
+                }
+            }
+        }
+
+        return true;
+    }
+};
+
+explanation: 
+The first step is to check if it's even possible to evenly distribute the cards into groups of size groupSize. We do this by verifying if the total number of cards is divisible by groupSize. If not, it's impossible to rearrange the cards, and we can immediately return False.
+
+Next, we count the occurrences of each card value in the hand using a map. Knowing the frequency of each card value will allow us to check if we have enough cards to form consecutive groups.
+
+We create a min-heap containing the unique card values from the hand to maintain the sorted order of the card values. Another option is to sort the map or use a map implementation that maintains sorted order.
+
+We then iterate through the min-heap and extract the smallest card value (currentCard) at each step. For each extracted value, we check the hand to see if it has a consecutive sequence of groupSize cards starting from currentCard. We do this by checking if all the card values in the range [currentCard, currentCard + groupSize - 1] are present in the frequency map and have enough occurrences to form a group.
+
+If any of these cards are missing from the count or have exhausted their occurrences, it means the hand cannot be rearranged into the desired groups, and we return False.
+
+However, if all consecutive sequences form valid groups, we can conclude that it's possible to rearrange the cards, and we return True.
+
+The condition "if currentCard + i not in hash map" enhances the solution's efficiency. It allows the function to terminate early when a required card for forming a group is absent. This prevents unnecessary decrement operations and subsequent checks, thus optimizing the overall performance to some extent.
+
