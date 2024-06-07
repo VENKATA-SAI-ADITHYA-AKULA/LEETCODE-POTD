@@ -1,0 +1,58 @@
+1.Problem Number: 648
+2.Problem Name: Replace words
+3.Difficulty: Medium
+4.Problem link: https://leetcode.com/problems/replace-words/description/
+5.Time Solved: 20:13
+
+Donot know trie so skipping that solution 
+
+Explanation:
+Check each letter in the sentence with the existing root dictionary If matched replace the derivative word with the root word in the dictionary or move forward.
+Example root= cat sentence= The cattle
+T-No
+Th-No
+The-No
+space- so skip
+c-no
+ca-no
+cat-yes so replace the cattle with cat.
+
+Solution:
+class Solution {
+public:
+    string replaceWords(vector<string>& dictionary, string sentence) {
+        map<string,bool>dic;
+        for(string root : dictionary)
+        {
+            dic[root]=true;
+        }
+        int strPtr=0,endPtr=0;
+        string res;
+        while(endPtr<sentence.length())
+        {
+            if(sentence[endPtr]==' ')
+            {
+                res+=" ";
+                strPtr=endPtr+1;
+                endPtr++;
+                continue;
+            }
+            string sub=sentence.substr(strPtr,endPtr-strPtr+1);
+            if(dic.find(sub)!=dic.end())
+            {
+                res+=sentence[endPtr];
+                while(endPtr<sentence.length()&&sentence[endPtr]!=' ')
+                {
+                    endPtr++;
+                }
+            }
+            else
+            {
+                res+=sentence[endPtr];
+                endPtr++;
+            }
+
+        }
+        return res;
+    }
+};
